@@ -1,51 +1,53 @@
 # Simple Rock Paper Scissors HTTP API
 
+This is a simple Rock Paper Scissors game that can be played through HTTP requests.
+
 ## Setup
 
-To run this simple program you need Node installed.
+To run this program, you need to have Node.js installed.
 
-First ``cd`` into the directory then run:
+1. Change into the directory where the game is located: `cd /path/to/game`
+2. Install the dependencies: `npm install`
+3. Start the game: `npm start`
 
-```
-npm install
-npm start
-```
+The game should now be running.
 
-The application should now be running.
+## API
 
-# API
+The game can be played by sending POST and GET requests to the following endpoints (default port: 8000):
 
-To use this application you only have to send POST and GET requests to the following endpoints (if self-hosted use e.g. localhost:8000/\<endpoint\>):
+### `GET /api/games/{id}`
+Gets the current state of a game. If you provide an authorization key, you will be able to see the move of the corresponding player before the game is over.
 
-## GET /api/games/{id}
-Return a game's current state. Supply with a authorization key to see that player's move before the game is over.
+Authorization
+* `key`: The authorization key for the player.
 
-**Authorization**: {key}
-
-## POST /api/games
-Creates a new game. Supply a playername in the request-body (if omitted the name will be "player1"):
-```
+### `POST /api/games`
+Creates a new game. You can supply a playername in the request body (if omitted, the name will be "player1"):
+```json
 {
     "name": "Lisa"
 }
 ```
-**Returns:** {key} used for authorization
+Returns
+* `key`: The authorization key for the player.
 
-## POST /api/games/{id}/join
+### `POST /api/games/{id}/join`
 Connects to a game with the given ID. Supply a playername in the request-body (if omitted the name will be "player2"):
-```
+```json
 {
     "name": "Pelle"
 }
 ```
 **Returns:** {key} used for authorization
 
-## POST api/games/{id}/move
-Make a move. Supply the authorization key and the specfic move in the request-body ("rock", "paper" or "scissors"):
+### `POST api/games/{id}/move`
+Makes a move in the game. You need to provide the authorization key and the specific move in the request body ("rock", "paper", or "scissors"):
 
-**Authorization**: {key}
+Authorization
+* `key`: The authorization key for the player.
 
-```
+```json
 {
 	"move": "Rock"
 }
@@ -55,11 +57,11 @@ Make a move. Supply the authorization key and the specfic move in the request-bo
 ``POST /api/games``
 
 **Body:**
-``
+```json
 {
-"name": "Lisa"
+	"name": "Lisa"
 }
-``
+```
 
 **Reply**: Created game with id: l88mdy9y5w, player name: Lisa, player key: 8onil1500px
 
@@ -68,11 +70,11 @@ Make a move. Supply the authorization key and the specfic move in the request-bo
 ``POST /api/games/ul7l7appln/join``
 
 **Body:**
-``
+```json
 {
-"name": "Pelle"
+	"name": "Pelle"
 }
-``
+```
 
 **Reply**: Successfully joined game: "l88mdy9y5w", player name: Pelle, player key: 1dvcmhwryiz
 
@@ -81,10 +83,10 @@ Make a move. Supply the authorization key and the specfic move in the request-bo
 
 ``GET /api/games/ul7l7appln``
 
-**Authorization**: 8onil1500px
+**Authorization**: `8onil1500px`
 
 **Reply**: 
-```
+```json
 {
 	"player1": {
 		"name": "Lisa",
@@ -101,7 +103,7 @@ Make a move. Supply the authorization key and the specfic move in the request-bo
 
 ``POST api/games/ul7l7appln/move``
 
-**Authorization**: 8onil1500px
+**Authorization**: `8onil1500px`
 
 **Body**:
 ``
@@ -116,7 +118,7 @@ Make a move. Supply the authorization key and the specfic move in the request-bo
 
 ``POST api/games/ul7l7appln/move``
 
-**Authorization**: 1dvcmhwryiz
+**Authorization**: `1dvcmhwryiz`
 
 **Body**:
 ``
@@ -131,10 +133,10 @@ Make a move. Supply the authorization key and the specfic move in the request-bo
 
 ``GET /api/games/ul7l7appln``
 
-Authorization: -- (game is over so everything is shown)
+Authorization: `--` (game is over so everything is shown)
 
 **Reply**: 
-```
+```json
 {
 	"player1": {
 		"name": "Lisa",
