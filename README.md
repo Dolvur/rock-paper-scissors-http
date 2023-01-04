@@ -18,7 +18,9 @@ The application should now be running.
 To use this application you only have to send POST and GET requests to the following endpoints (if self-hosted use e.g. localhost:8000/\<endpoint\>):
 
 ## GET /api/games/{id}
-Return a game's current state
+Return a game's current state. Supply with a authorization key to see that player's move before the game is over.
+
+**Authorization**: {key}
 
 ## POST /api/games
 Creates a new game. Supply a playername in the request-body (if omitted the name will be "player1"):
@@ -27,6 +29,7 @@ Creates a new game. Supply a playername in the request-body (if omitted the name
     "name": "Lisa"
 }
 ```
+**Returns:** {key} used for authorization
 
 ## POST /api/games/{id}/join
 Connects to a game with the given ID. Supply a playername in the request-body (if omitted the name will be "player2"):
@@ -35,13 +38,16 @@ Connects to a game with the given ID. Supply a playername in the request-body (i
     "name": "Pelle"
 }
 ```
+**Returns:** {key} used for authorization
 
 ## POST api/games/{id}/move
-Make a move. Supply the name and move in the request-body:
+Make a move. Supply the authorization key and the specfic move in the request-body ("rock", "paper" or "scissors"):
+
+**Authorization**: {key}
+
 ```
 {
-"name": "Lisa",
-"move": "Rock"
+	"move": "Rock"
 }
 ```
 
@@ -55,7 +61,7 @@ Make a move. Supply the name and move in the request-body:
 }
 ``
 
-**Reply**: Created game with id: ul7l7appln
+**Reply**: Created game with id: l88mdy9y5w, player name: Lisa, player key: 8onil1500px
 
 ---
 
@@ -68,12 +74,14 @@ Make a move. Supply the name and move in the request-body:
 }
 ``
 
-**Reply**: Successfully joined game: "ul7l7appln", player name: Pelle
+**Reply**: Successfully joined game: "l88mdy9y5w", player name: Pelle, player key: 1dvcmhwryiz
 
 ---
 
 
 ``GET /api/games/ul7l7appln``
+
+**Authorization**: 8onil1500px
 
 **Reply**: 
 ```
@@ -83,8 +91,7 @@ Make a move. Supply the name and move in the request-body:
 		"move": null
 	},
 	"player2": {
-		"name": "Pelle",
-		"move": null
+		"name": "Pelle"
 	},
 	"winner": null
 }
@@ -94,33 +101,37 @@ Make a move. Supply the name and move in the request-body:
 
 ``POST api/games/ul7l7appln/move``
 
+**Authorization**: 8onil1500px
+
 **Body**:
 ``
 {
-"name": "Lisa",
 "move": "Rock"
 }
 ``
 
-**Reply**: Move rock made by Lisa in game ul7l7appln
+**Reply**: Action: "rock" by Lisa in game l88mdy9y5w
 
 ---
 
 ``POST api/games/ul7l7appln/move``
 
+**Authorization**: 1dvcmhwryiz
+
 **Body**:
 ``
 {
-"name": "Pelle",
 "move": "Paper"
 }
 ``
 
-**Reply**: Move paper made by Pelle in game ul7l7appln
+**Reply**: Action: "paper" by Pelle in game l88mdy9y5w
 
 ---
 
 ``GET /api/games/ul7l7appln``
+
+Authorization: -- (game is over so everything is shown)
 
 **Reply**: 
 ```
