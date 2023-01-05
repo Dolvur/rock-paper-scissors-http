@@ -33,7 +33,7 @@ server.route({
         const key = request.headers.authorization;
         const game = games[id];
         if (!game) {
-            return `Game ${id} not found`;
+            return h.response(`Game ${id} not found`).code(404);
         }
 
         const player1 = game.player1;
@@ -60,7 +60,7 @@ server.route({
             visibleState.player2.move = player2.move;
         }
 
-        return visibleState;
+        return h.response(visibleState).code(200);
     },
 });
 
@@ -84,7 +84,7 @@ server.route({
             winner: null
         };
 
-        return `Created game with id: ${id}, player name: ${playerName}, player key: ${player1Key}`
+        return h.response(`Created game with id: ${id}, player name: ${playerName}, player key: ${player1Key}`).code(201);
     }
 });
 
@@ -96,13 +96,13 @@ server.route({
         const id = request.params.id;
         const playerName = request.payload.name ? request.payload.name : "player2";
         if (!games[id]) {
-            return `Game ${id} not found`;
+            return h.response(`Game ${id} not found`).code(404);
         }
         if (games[id].player2.name) {
-            return "Game already has two players";
+            return h.response(`Game ${id} already has two players`).code(400);
         }
         if (games[id].player1.name === playerName) {
-            return "Player name already taken";
+            return h.response(`Player name already taken`).code(400);
         }
 
         games[id].player2.name = playerName;
@@ -113,7 +113,7 @@ server.route({
         }
         games[id].player2.key = player2Key;
 
-        return `Successfully joined game: "${id}", player name: ${playerName}, player key: ${player2Key}`;
+        return h.response(`Successfully joined game: "${id}", player name: ${playerName}, player key: ${player2Key}`).code(200);
     }
 });
 
@@ -129,13 +129,13 @@ server.route({
         const game = games[id];
         
         if (!game) {
-            return `Game ${id} not found`;
+            return h.response(`Game ${id} not found`).code(404);
         }
         if (game.winner) {
-            return `Game ${id} is already over`;
+            return h.response(`Game ${id} is already over`).code(400);
         }
         if (!validMoves.includes(move)) {
-            return `Invalid move: ${move}, valid moves are: ${validMoves}`;
+            return h.response(`Invalid move: ${move}, valid moves are: ${validMoves}`).code(400);
         }
         
         const player1 = game.player1;
@@ -148,7 +148,7 @@ server.route({
             player2.move = move;
             playerName = player2.name;
         } else {
-            return `Key: "${key}" invalid for game: ${id}`;
+            return h.response(`Key: "${key}" invalid for game: ${id}`).code(401);
         }
 
         // check if both players have made a move
@@ -165,7 +165,7 @@ server.route({
             }
         }
 
-        return `Action: "${move}" by ${playerName} in game ${id}`;
+        return h.response(`Action: "${move}" by ${playerName} in game ${id}`).code(200);
     }
 });
 
