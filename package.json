@@ -4,8 +4,8 @@
   "description": "A HTTP-API for Rock Paper Scissors",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "lab -a code -t 100 -L"
+    "start": "node src/server.js",
+    "test": "lab --assert @hapi/code --coverage"
   },
   "repository": {
     "type": "git",
@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/Dolvur/rock-paper-scissors-http#readme",
   "dependencies": {
+    "@hapi/hapi": "^21.1.0"
+  },
+  "devDependencies": {
     "@hapi/code": "^9.0.2",
-    "@hapi/hapi": "^21.1.0",
     "@hapi/lab": "^25.1.0"
   }
 }
