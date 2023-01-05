@@ -1,7 +1,6 @@
 const Hapi = require('@hapi/hapi');
 const Code = require('@hapi/code');
 const Lab = require('@hapi/lab');
-const { getGame, createGame, joinGame, makeAMove } = require('../src/utils.js');
 const { initRoutes } = require('../src/routes.js');
 
 const { expect } = Code;
