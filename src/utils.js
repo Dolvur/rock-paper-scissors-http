@@ -36,7 +36,7 @@ function getGame(request, h, games) {
 
 function createGame(request, h, games) {
     let id = Math.random().toString(36).substring(2, 15);
-    const playerName = request.payload.name ? request.payload.name : "player1";
+    const playerName = request.payload?.name ? request.payload.name : "player1";
     // make sure the id is unique
     while (games[id]) { 
         id = Math.random().toString(36).substring(2, 15);
@@ -55,7 +55,7 @@ function createGame(request, h, games) {
 
 function joinGame(request, h, games) {
     const id = request.params.id;
-    const playerName = request.payload.name ? request.payload.name : "player2";
+    const playerName = request.payload?.name ? request.payload.name : "player2";
     if (!games[id]) {
         return h.response(`Game ${id} not found`).code(404);
     }

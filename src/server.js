@@ -1,5 +1,5 @@
 const Hapi = require('@hapi/hapi');
-const { getGame, createGame, joinGame, makeAMove } = require('./utils.js');
+const { initRoutes } = require('./routes.js');
 
 // Game states for Rock Paper Scissors
 let games = {
@@ -24,44 +24,10 @@ const server = Hapi.server({
 });
 
 // Add Routes:
-// Get a current game
-server.route({
-    method: 'GET',
-    path: '/api/games/{id}',
-    handler: function (request, h) {
-        return getGame(request, h, games);
-    },
-});
+server.route(initRoutes(games));
 
-// Create a new game
-server.route({
-    method: 'POST',
-    path: '/api/games',
-    handler: function (request, h) {
-        return createGame(request, h, games);
-    }
-});
-
-// Join an existing game
-server.route({
-    method: 'POST',
-    path: '/api/games/{id}/join',
-    handler: function (request, h) {
-        return joinGame(request, h, games);
-    }
-});
-
-// Make a move
-server.route({
-    method: 'POST',
-    path: '/api/games/{id}/move',
-    handler: function (request, h) {
-        return makeAMove(request, h, games);
-    }
-});
-
-// start the server
-const start = async function () {
+// Start the server
+const start = async () => {
         try {
             await server.start();
         }
