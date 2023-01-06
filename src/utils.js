@@ -1,4 +1,14 @@
-const { responseGameNotFound, responseGameCreated, responseGameFull, responseNameTaken, responseGameJoined, responseGameIsOver, responseInvalidMove, responseInvalidKey, responseGameState } = require("./responses");
+const {
+    responseGameNotFound,
+    responseGameCreated,
+    responseGameFull,
+    responseNameTaken,
+    responseGameJoined,
+    responseGameIsOver,
+    responseInvalidMove,
+    responseInvalidKey,
+    responseGameState,
+} = require("./responses");
 
 // Help functions
 function getUniqueKey(isUniquePredicate = () => true) {
@@ -19,8 +29,8 @@ function getVisibleState(game, key) {
         player2: {
             name: player2.name,
         },
-        winner: game.winner
-    }
+        winner: game.winner,
+    };
 
     // if the game is over, show both players moves
     if (game.winner) {
@@ -55,7 +65,10 @@ function setWinnerIfGameDone(game, validMoves) {
         // determine winner
         if (player1MoveIndex === player2MoveIndex) {
             game.winner = "tie";
-        } else if (player1MoveIndex - player2MoveIndex === 1 || player1MoveIndex - player2MoveIndex === -2) {
+        } else if (
+            player1MoveIndex - player2MoveIndex === 1 ||
+            player1MoveIndex - player2MoveIndex === -2
+        ) {
             game.winner = player1.name;
         } else {
             game.winner = player2.name;
@@ -64,7 +77,6 @@ function setWinnerIfGameDone(game, validMoves) {
 }
 
 // Response functions
-
 
 // Route handlers
 function getGame(request, h, games) {
@@ -85,9 +97,9 @@ function createGame(request, h, games) {
 
     console.log("Creating game with id: " + id);
     games[id] = {
-        player1: {key: player1Key, name: playerName, move: null},
-        player2: {key: null, name: null, move: null},
-        winner: null
+        player1: { key: player1Key, name: playerName, move: null },
+        player2: { key: null, name: null, move: null },
+        winner: null,
     };
 
     return responseGameCreated(h, id, player1Key, playerName);
@@ -121,7 +133,7 @@ function makeAMove(request, h, games) {
     const move = request.payload.move.toLowerCase();
     const validMoves = ["rock", "paper", "scissors"];
     const game = games[id];
-    
+
     if (!game) {
         return responseGameNotFound(h);
     }
@@ -131,7 +143,7 @@ function makeAMove(request, h, games) {
     if (!validMoves.includes(move)) {
         return responseInvalidMove(h);
     }
-    
+
     const player = getPlayer(game, key);
     if (!player) {
         return responseInvalidKey(h);
@@ -147,5 +159,5 @@ module.exports = {
     getGame,
     createGame,
     joinGame,
-    makeAMove
-}
+    makeAMove,
+};
