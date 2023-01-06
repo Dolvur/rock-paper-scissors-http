@@ -19,7 +19,7 @@ function responseGameFull(h) {
 }
 
 function responseGameIsOver(h) {
-    return h.response({ error: "Game is over" }).code(400);
+    return h.response({ error: "Game is over" }).code(403);
 }
 
 function responseInvalidMove(h) {
