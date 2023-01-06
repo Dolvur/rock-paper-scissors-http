@@ -22,28 +22,22 @@ function getUniqueKey(isUniquePredicate = () => true) {
 function getVisibleState(game, key) {
     const player1 = game.player1;
     const player2 = game.player2;
-    let visibleState = {
-        player1: {
-            name: player1.name,
-        },
-        player2: {
-            name: player2.name,
-        },
-        winner: game.winner,
-    };
+    const visibleState = structuredClone(game);
+    // Remove keys from the visible state
+    delete visibleState.player1.key;
+    delete visibleState.player2.key;
 
-    // if the game is over, show both players moves
-    if (game.winner) {
-        visibleState.player1.move = player1.move;
-        visibleState.player2.move = player2.move;
+    // Don't show opponent's move if the game is ongoing
+    if (!game.winner) {
+        if (player1.key === key) {
+            visibleState.player2.move = 'unknown';
+        } else if (player2.key === key) {
+            visibleState.player1.move = 'unknown';
+        } else {
+            visibleState.player1.move = 'unknown';
+            visibleState.player2.move = 'unknown';
+        }
     }
-    // if the game is not over, only show the player's own move
-    else if (player1.key === key) {
-        visibleState.player1.move = player1.move;
-    } else if (player2.key === key) {
-        visibleState.player2.move = player2.move;
-    }
-
     return visibleState;
 }
 
@@ -69,9 +63,9 @@ function setWinnerIfGameDone(game, validMoves) {
             player1MoveIndex - player2MoveIndex === 1 ||
             player1MoveIndex - player2MoveIndex === -2
         ) {
-            game.winner = player1.name;
+            game.winner = game.player1.name;
         } else {
-            game.winner = player2.name;
+            game.winner = game.player2.name;
         }
     }
 }
