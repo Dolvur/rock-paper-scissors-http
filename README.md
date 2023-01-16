@@ -12,14 +12,28 @@ To run this program, you need to have Node.js installed.
 
 The game should now be running.
 
+## Insomnia
+
+One way to send the requests is to use a graphical program like Postman or Insomnia.
+
+Using Insomnia the requests can be specified like in the following picture:
+
+![Window of the Insomnia application](/pictures/Insomnia_window.PNG)
+
+The body can be added as a JSON with their corresponding keyvalue pairs mentioned in the API. Authorization keys can be added in the Headers tab like following:
+
+![Window of the Insomnia application](/pictures/Insomnia_authorizations_headers.png)
+
+Note: If you are using this approach, it could be useful to use enviroment variables to prevent having to retype IDs and keys in all the requests.
+
 ## API
 
-The game can be played by sending POST and GET requests to the following endpoints (default port: 8000):
+The game can be played by sending POST and GET requests to the endpoints shown below (default port: 8000):
 
 ### `GET /api/games/{id}`
-Gets the current state of a game. If you provide an authorization key, you will be able to see the move of the corresponding player before the game is over.
+Get the current state of a game. If you provide an authorization key, you will be able to see the move of the corresponding player before the game is over.
 
-Authorization
+**Authorization**
 * `key`: The authorization key for the player.
 
 ### `POST /api/games`
@@ -29,7 +43,7 @@ Creates a new game. You can supply a playername in the request body (if omitted,
     "name": "Lisa"
 }
 ```
-Returns
+**Returns**
 * `key`: The authorization key for the player.
 
 ### `POST /api/games/{id}/join`
@@ -39,22 +53,25 @@ Connects to a game with the given ID. Supply a playername in the request-body (i
     "name": "Pelle"
 }
 ```
-**Returns:** {key} used for authorization
+**Returns:**
+* `key`: The authorization key for the player.
 
-### `POST api/games/{id}/move`
+### `POST /api/games/{id}/move`
 Makes a move in the game. You need to provide the authorization key and the specific move in the request body ("rock", "paper", or "scissors"):
 
-Authorization
+**Authorization**
 * `key`: The authorization key for the player.
 
 ```json
 {
-	"move": "Rock"
+	"move": "rock"
 }
 ```
 
 ## Example:
 ``POST /api/games``
+
+Creating a game with name "Lisa".
 
 **Body:**
 ```json
@@ -63,11 +80,20 @@ Authorization
 }
 ```
 
-**Reply**: Created game with id: l88mdy9y5w, player name: Lisa, player key: 8onil1500px
+**Reply**:
+```json
+{
+	"gameID": "vkw0lnhzja",
+	"key": "32i6vi453zm",
+	"name": "Lisa"
+}
+```
 
 ---
 
-``POST /api/games/ul7l7appln/join``
+``POST /api/games/vkw0lnhzja/join``
+
+Joining the game with name "Pelle".
 
 **Body:**
 ```json
@@ -76,14 +102,22 @@ Authorization
 }
 ```
 
-**Reply**: Successfully joined game: "l88mdy9y5w", player name: Pelle, player key: 1dvcmhwryiz
+**Reply**:
+```json
+{
+	"name": "Pelle",
+	"key": "s4nfguxzp2"
+}
+```
 
 ---
 
 
-``GET /api/games/ul7l7appln``
+``GET /api/games/vkw0lnhzja``
 
-**Authorization**: `8onil1500px`
+Get game state from Lisa's perspective.
+
+**Authorization**: `32i6vi453zm`
 
 **Reply**: 
 ```json
@@ -93,7 +127,8 @@ Authorization
 		"move": null
 	},
 	"player2": {
-		"name": "Pelle"
+		"name": "Pelle",
+		"move": "unknown"
 	},
 	"winner": null
 }
@@ -101,52 +136,84 @@ Authorization
 
 ---
 
-``POST api/games/ul7l7appln/move``
+``POST api/games/vkw0lnhzja/move``
 
-**Authorization**: `8onil1500px`
+Make the move "rock" for Pelle.
+
+**Authorization**: `s4nfguxzp2`
 
 **Body**:
-``
+```json
 {
-"move": "Rock"
+	"move": "rock"
 }
-``
+```
 
-**Reply**: Action: "rock" by Lisa in game l88mdy9y5w
+**Reply**:
+```json
+{
+	"player1": {
+		"name": "Lisa",
+		"move": "unknown"
+	},
+	"player2": {
+		"name": "Pelle",
+		"move": "rock"
+	},
+	"winner": null
+}
+```
 
 ---
 
-``POST api/games/ul7l7appln/move``
+``POST api/games/vkw0lnhzja/move``
 
-**Authorization**: `1dvcmhwryiz`
+Make the move "paper" for Lisa.
+
+**Authorization**: `32i6vi453zm`
 
 **Body**:
-``
+```json
 {
-"move": "Paper"
+	"move": "paper"
 }
-``
+```
 
-**Reply**: Action: "paper" by Pelle in game l88mdy9y5w
+**Reply**:
+```json
+{
+	"player1": {
+		"name": "Lisa",
+		"move": "paper"
+	},
+	"player2": {
+		"name": "Pelle",
+		"move": "rock"
+	},
+	"winner": "Lisa"
+}
+```
 
 ---
 
-``GET /api/games/ul7l7appln``
+``GET /api/games/vkw0lnhzja``
 
-Authorization: `--` (game is over so everything is shown)
+Get the game state.
+
+**Authorization**: `--` (game is over so everything is shown)
 
 **Reply**: 
 ```json
 {
 	"player1": {
 		"name": "Lisa",
-		"move": "rock"
+		"move": "paper"
 	},
 	"player2": {
 		"name": "Pelle",
-		"move": "paper"
+		"move": "rock"
 	},
-	"winner": "Pelle"
+	"winner": "Lisa"
 }
 ```
 
