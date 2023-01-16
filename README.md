@@ -12,6 +12,8 @@ To run this program, you need to have Node.js installed.
 
 The game should now be running.
 
+If you want to run the tests, follow the instructions above but run `npm test` instead of `npm start`.
+
 ## Insomnia
 
 One way to send the requests is to use a graphical program like Postman or Insomnia.
